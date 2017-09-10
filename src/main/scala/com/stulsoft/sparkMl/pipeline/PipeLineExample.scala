@@ -4,6 +4,7 @@
 
 package com.stulsoft.sparkMl.pipeline
 
+import com.stulsoft.sparkMl.util.TimeWatch
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.feature.{HashingTF, Tokenizer}
@@ -18,6 +19,7 @@ object PipeLineExample extends App {
   test()
 
   def test(): Unit = {
+    val tw = TimeWatch()
     val spark: SparkSession = SparkSession.builder.
       master("local")
       .appName("Pipe Line Example")
@@ -46,7 +48,9 @@ object PipeLineExample extends App {
       .setStages(Array(tokenizer, hashingTF, lr))
 
     // Fit the pipeline to training documents.
+    tw.start()
     val model = pipeline.fit(training)
+    println(s"Fit (training) duration is ${tw.duration} ms")
 
     // Now we can optionally save the fitted pipeline to disk
     model.write.overwrite().save("/tmp/spark-logistic-regression-model")
@@ -68,12 +72,14 @@ object PipeLineExample extends App {
     )).toDF("id", "text")
 
     // Make predictions on test documents.
+    tw.start()
     model.transform(test)
       .select("id", "text", "probability", "prediction")
       .collect()
       .foreach { case Row(id: Long, text: String, prob: Vector, prediction: Double) =>
         println(s"($id, $text) --> prob=$prob, prediction=$prediction")
       }
+    println(s"Transform (prediction) duration is ${tw.duration}ms.")
 
     spark.stop()
   }
