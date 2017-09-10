@@ -23,7 +23,7 @@ object EstimatorTransformerParamExample extends App {
     var endTime: Long = 0
     val spark: SparkSession = SparkSession.builder.
       master("local")
-      .appName("spark session example")
+      .appName("Estimator Transformer Param Example")
       .getOrCreate()
     // Prepare training data from a list of (label, features) tuples.
     val training = spark.createDataFrame(Seq(

@@ -9,7 +9,7 @@ lazy val commonMath3Version = "3.6.1"
 lazy val commonSettings = Seq(
   organization := "com.stulsoft",
   version := "0.0.1-SNAPSHOT",
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.11.11",
   scalacOptions ++= Seq(
     "-feature",
     "-language:implicitConversions",
