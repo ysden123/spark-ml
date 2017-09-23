@@ -37,6 +37,12 @@ object GeneralizedLinearRegressionExample extends App {
 
     // Print the coefficients and intercept for generalized linear regression model
     println(s"Coefficients: ${model.coefficients}")
+
+    val maxCoefficient = model.coefficients
+      .toArray
+      .map(c => Math.abs(c))
+      .zipWithIndex.maxBy(_._1)
+    println(s"Maximum coefficient = ${maxCoefficient._1} [${maxCoefficient._2}-nth]")
     println(s"Intercept: ${model.intercept}")
 
     // Summarize the model over the training set and print out some metrics
