@@ -8,8 +8,6 @@ import com.stulsoft.sparkMl.util.Utils
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.sql.SparkSession
 
-import scala.io.Source
-
 /** Regression - Linear regression example
   *
   * @see [[https://spark.apache.org/docs/latest/ml-classification-regression.html#linear-regression Linear regression]]
@@ -25,8 +23,12 @@ object LinearRegressionWithElasticNetExample extends App {
       .appName("Regression - Linear regression example")
       .getOrCreate()
 
-    val maxNumberOfFeatures = countNumberOfFeatures("data/sample_linear_regression_data.txt")
+    val maxNumberOfFeatures = Utils.countNumberOfFeatures("data/sample_linear_regression_data.txt")
     println(s"maxNumberOfFeatures = $maxNumberOfFeatures")
+
+    val maxDataIndex = Utils.countMaxDataIndex("data/sample_linear_regression_data.txt")
+    println(s"maxDataIndex = $maxDataIndex")
+
     // Load training data
     val training = spark.read.format("libsvm")
       .load(Utils.getResourceFilePath("data/sample_linear_regression_data.txt"))
@@ -55,14 +57,5 @@ object LinearRegressionWithElasticNetExample extends App {
 
     spark.stop()
     println("<==test")
-  }
-
-  def countNumberOfFeatures(path: String): Int = {
-    val src = Source.fromFile(Utils.getResourceFilePath(path))
-    val maxLength = src.getLines()
-      .map(_.split(" ").tail.length)
-      .max
-    src.close()
-    maxLength
   }
 }
